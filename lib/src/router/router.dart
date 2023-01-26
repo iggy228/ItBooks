@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:it_book/src/screens/book_detail_screen.dart';
 import 'package:it_book/src/screens/home_screen.dart';
 
 final router = GoRouter(
@@ -11,7 +12,7 @@ final router = GoRouter(
     GoRoute(
       name: 'bookDetail',
       path: '/:bookIsbn',
-      builder: (context, state) => const HomeScreen(),
+      builder: (context, state) => const BookDetailScreen(),
     ),
   ],
 );
