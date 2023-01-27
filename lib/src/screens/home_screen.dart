@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:it_book/src/layouts/main_layout.dart';
 import 'package:it_book/src/models/book.dart';
 import 'package:it_book/src/repositories/it_book_repository.dart';
+import 'package:it_book/src/widgets/book_list.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -65,56 +67,53 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-        child: Column(
-          children: <Widget>[
-            TextField(
-              controller: searchFieldController,
-              onSubmitted: (_) => searchBooks(),
-              textInputAction: TextInputAction.search,
-              decoration: InputDecoration(
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () => searchBooks(),
-                ),
+    return MainLayout(
+      child: Column(
+        children: <Widget>[
+          TextField(
+            controller: searchFieldController,
+            onSubmitted: (_) => searchBooks(),
+            textInputAction: TextInputAction.search,
+            decoration: InputDecoration(
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () => searchBooks(),
               ),
             ),
-            Builder(builder: (context) {
-              if (error != null) {
-                return Text(error!);
-              }
-              if (searchedBooks != null) {
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: searchedBooks!.length,
-                    itemBuilder: (context, index) => ListTile(
-                      onTap: () => context.pushNamed('bookDetail', params: {
-                        'bookIsbn': searchedBooks![index].isbn13,
-                      }),
-                      title: Text(searchedBooks![index].title),
-                      subtitle: Text(searchedBooks![index].subtitle),
-                    ),
-                  ),
-                );
-              }
+          ),
+          const SizedBox(height: 8),
+          Builder(builder: (context) {
+            if (error != null) {
+              return Text(error!);
+            }
+            if (searchedBooks != null) {
               return Expanded(
-                child: ListView.builder(
-                  itemCount: newBooks.length,
-                  itemBuilder: (context, index) => ListTile(
-                    onTap: () => context.pushNamed('bookDetail', params: {
+                child: BookList(
+                  title: 'Results for ${searchFieldController.text}:',
+                  books: newBooks,
+                  onListItemTap: (index) => context.pushNamed(
+                    'bookDetail',
+                    params: {
                       'bookIsbn': newBooks[index].isbn13,
-                    }),
-                    title: Text(newBooks[index].title),
-                    subtitle: Text(newBooks[index].subtitle),
+                    },
                   ),
                 ),
               );
-            }),
-          ],
-        ),
+            }
+            return Expanded(
+              child: BookList(
+                title: 'New books for reading: ',
+                books: newBooks,
+                onListItemTap: (index) => context.pushNamed(
+                  'bookDetail',
+                  params: {
+                    'bookIsbn': newBooks[index].isbn13,
+                  },
+                ),
+              ),
+            );
+          }),
+        ],
       ),
     );
   }

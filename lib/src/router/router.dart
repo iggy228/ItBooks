@@ -12,7 +12,8 @@ final router = GoRouter(
     GoRoute(
       name: 'bookDetail',
       path: '/:bookIsbn',
-      builder: (context, state) => const BookDetailScreen(),
+      builder: (context, state) =>
+          BookDetailScreen(isbn: state.params['bookIsbn']),
     ),
   ],
 );

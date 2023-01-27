@@ -12,7 +12,7 @@ class BookDetail {
   final String image;
   final String url;
   final String desc;
-  final Map<String, String> pdf;
+  final Map<String, String>? pdf;
 
   BookDetail({
     required this.title,
