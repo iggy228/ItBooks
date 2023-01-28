@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:it_book/generated/l10n.dart';
 import 'package:it_book/src/layouts/main_layout.dart';
 import 'package:it_book/src/models/book_detail.dart';
 import 'package:it_book/src/repositories/it_book_repository.dart';
+import 'package:it_book/src/widgets/network_image_with_loader.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BookDetailScreen extends StatefulWidget {
   final String? isbn;
@@ -40,6 +43,17 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     }
   }
 
+  void openWeb(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      launchUrl(uri);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(S.of(context).failedToOpenUrl)),
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -57,7 +71,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
         if (book != null) {
           return ListView(
             children: <Widget>[
-              Image.network(book!.image),
+              NetworkImageWithLoader(url: book!.image),
               const SizedBox(height: 16),
               Text(
                 book!.title,
@@ -69,14 +83,14 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 24),
-              Text(book!.desc),
+              Text(book!.desc.replaceAll('&#039;', "'")),
               const SizedBox(height: 16),
               Text(book!.price,
                   style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {},
-                child: Text('Buy on this page'),
+                onPressed: () => openWeb(book!.url),
+                child: Text(S.of(context).buyOnPage),
               ),
             ],
           );

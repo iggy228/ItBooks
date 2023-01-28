@@ -22,9 +22,10 @@ class BookList extends StatelessWidget {
           title,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
+        const SizedBox(height: 8),
         Expanded(
           child: ListView.builder(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.only(bottom: 8),
             itemCount: books.length,
             itemBuilder: (context, index) => Card(
               elevation: 5,

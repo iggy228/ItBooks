@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:it_book/generated/l10n.dart';
 import 'package:it_book/src/router/router.dart';
 
 class MyApp extends StatelessWidget {
@@ -15,6 +17,13 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routerConfig: router,
+      localizationsDelegates: const [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: S.delegate.supportedLocales,
     );
   }
 }

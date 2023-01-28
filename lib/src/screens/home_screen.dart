@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:it_book/generated/l10n.dart';
 import 'package:it_book/src/layouts/main_layout.dart';
 import 'package:it_book/src/models/book.dart';
 import 'package:it_book/src/repositories/it_book_repository.dart';
@@ -37,6 +38,13 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       error = null;
     });
+
+    if (searchFieldController.text.isEmpty) {
+      setState(() {
+        searchedBooks = null;
+      });
+      return;
+    }
 
     try {
       final result =
@@ -89,8 +97,10 @@ class _HomeScreenState extends State<HomeScreen> {
             if (searchedBooks != null) {
               return Expanded(
                 child: BookList(
-                  title: 'Results for ${searchFieldController.text}:',
-                  books: newBooks,
+                  title: S
+                      .of(context)
+                      .searchBookResult(searchFieldController.text),
+                  books: searchedBooks!,
                   onListItemTap: (index) => context.pushNamed(
                     'bookDetail',
                     params: {
@@ -102,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
             }
             return Expanded(
               child: BookList(
-                title: 'New books for reading: ',
+                title: S.of(context).newBooksForReading,
                 books: newBooks,
                 onListItemTap: (index) => context.pushNamed(
                   'bookDetail',

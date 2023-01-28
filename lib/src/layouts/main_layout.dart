@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:it_book/generated/l10n.dart';
 
 class MainLayout extends StatelessWidget {
   final Widget child;
@@ -9,7 +10,7 @@ class MainLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('IT Book'),
+        title: Text(S.of(context).appTitle),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
