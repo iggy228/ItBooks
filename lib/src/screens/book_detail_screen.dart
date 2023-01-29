@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:it_book/generated/l10n.dart';
 import 'package:it_book/src/layouts/main_layout.dart';
 import 'package:it_book/src/models/book_detail.dart';
-import 'package:it_book/src/repositories/it_book_repository.dart';
+import 'package:it_book/src/providers/book_repository_provider.dart';
 import 'package:it_book/src/widgets/network_image_with_loader.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class BookDetailScreen extends StatefulWidget {
+class BookDetailScreen extends ConsumerStatefulWidget {
   final String? isbn;
 
   const BookDetailScreen({Key? key, this.isbn}) : super(key: key);
 
   @override
-  State<BookDetailScreen> createState() => _BookDetailScreenState();
+  ConsumerState<BookDetailScreen> createState() => _BookDetailScreenState();
 }
 
-class _BookDetailScreenState extends State<BookDetailScreen> {
+class _BookDetailScreenState extends ConsumerState<BookDetailScreen> {
   String? error;
   BookDetail? book;
 
@@ -31,7 +32,8 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     }
 
     try {
-      final result = await ItBookRepository().getBookByIsbn(widget.isbn!);
+      final result =
+          await ref.read(bookRepositoryProvider).getBookByIsbn(widget.isbn!);
 
       setState(() {
         book = result;
@@ -57,7 +59,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   @override
   void initState() {
     super.initState();
-
     getBook();
   }
 

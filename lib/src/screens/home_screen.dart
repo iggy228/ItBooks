@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:it_book/generated/l10n.dart';
 import 'package:it_book/src/layouts/main_layout.dart';
 import 'package:it_book/src/models/book.dart';
-import 'package:it_book/src/repositories/it_book_repository.dart';
+import 'package:it_book/src/providers/book_repository_provider.dart';
 import 'package:it_book/src/widgets/book_list.dart';
 import 'package:it_book/src/widgets/paged_book_list.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   final _pageSize = 10;
   final searchFieldController = TextEditingController();
   final pagingController = PagingController<int, Book>(firstPageKey: 1);
@@ -41,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void getBookList() async {
     try {
-      final result = await ItBookRepository().getNewBooks();
+      final result = await ref.read(bookRepositoryProvider).getNewBooks();
 
       setState(() {
         newBooks = result;
@@ -55,7 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void fetchSearchedBooks(int page) async {
     try {
-      final newResult = await ItBookRepository()
+      final newResult = await ref
+          .read(bookRepositoryProvider)
           .searchBooks(searchFieldController.text, page);
 
       final isLastPage = newResult.books.length < _pageSize;
