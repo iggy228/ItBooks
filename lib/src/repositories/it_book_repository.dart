@@ -1,17 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:it_book/src/models/book.dart';
 import 'package:it_book/src/models/book_detail.dart';
+import 'package:it_book/src/models/search_book_result.dart';
 
 class ItBookRepository {
   final baseUrl = 'https://api.itbook.store/1.0/';
 
-  Future<List<Book>> searchBooks(String search) async {
+  Future<SearchBookResult> searchBooks(String search, int page) async {
     try {
       final Response<Map<String, dynamic>> response =
-          await Dio().get('$baseUrl/search/$search');
-      return response.data?['books']
-          .map<Book>((element) => Book.fromMap(element))
-          .toList();
+          await Dio().get('$baseUrl/search/$search/$page');
+      return SearchBookResult.fromMap(response.data!);
     } on DioError {
       rethrow;
     }
